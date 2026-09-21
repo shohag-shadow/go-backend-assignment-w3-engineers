@@ -14,17 +14,21 @@ import (
 )
 
 func init() {
+	// ns := beego.NewNamespace("/v1",
+	// 	beego.NSNamespace("/object",
+	// 		beego.NSInclude(
+	// 			&controllers.ObjectController{},
+	// 		),
+	// 	),
+	// 	beego.NSNamespace("/user",
+	// 		beego.NSInclude(
+	// 			&controllers.UserController{},
+	// 		),
+	// 	),
+	// )
 	ns := beego.NewNamespace("/v1",
-		beego.NSNamespace("/object",
-			beego.NSInclude(
-				&controllers.ObjectController{},
-			),
-		),
-		beego.NSNamespace("/user",
-			beego.NSInclude(
-				&controllers.UserController{},
-			),
-		),
+		beego.NSRouter("/properties", &controllers.PropertyController{}, "get:DemoResponse"),
+		beego.NSRouter("/properties/:id", &controllers.PropertyController{}, "get:DemoResponse"),
 	)
 	beego.AddNamespace(ns)
 }
