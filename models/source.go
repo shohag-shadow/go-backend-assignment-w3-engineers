@@ -1,15 +1,45 @@
 package models
 
+import (
+	"encoding/json"
+)
+
 type CategoryItem struct {
-	LocationID int      `json:"LocationID"`
+	LocationID string   `json:"LocationID"`
 	Name       string   `json:"Name"`
 	Type       string   `json:"Type"`
 	Slug       string   `json:"Slug"`
 	Display    []string `json:"Display"`
 }
+
+type CategoryList struct {
+	Items []CategoryItem `json:"categories"`
+}
+
+// custom unmershall as we need to unmarshall twice to get categorytem from the string.
+func (c *CategoryList) UnmarshalJSON(data []byte) error {
+	var raw string
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+
+	if raw == "" {
+		c.Items = nil
+		return nil
+	}
+
+	var items []CategoryItem
+	if err := json.Unmarshal([]byte(raw), &items); err != nil {
+		return err
+	}
+	c.Items = items
+	return nil
+}
+
 type LongitudeLatitude struct {
 	Coordinates [2]float64 `json:"coordinates"`
 }
+
 type Property struct {
 	Id                   string            `json:"id"`
 	Feed                 int               `json:"feed"`
@@ -32,7 +62,7 @@ type Property struct {
 	StarRating           int               `json:"star_rating"`
 	AmenityCategories    []string          `json:"amenity_categories"`
 	LonLat               LongitudeLatitude `json:"lonlat"`
-	Categories           string            `json:"categories"`
+	Categories           CategoryList      `json:"categories"`
 	Published            bool              `json:"published"`
 	Images               []string          `json:"images"`
 }
