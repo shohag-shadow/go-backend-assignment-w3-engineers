@@ -26,9 +26,17 @@ func init() {
 	// 		),
 	// 	),
 	// )
+	// ns := beego.NewNamespace("/v1",
+	// 	beego.NSNamespace("/pro"(
+	// 		beego.NSRouter("/properties", &controllers.PropertyController{}, "get:DemoResponse"),
+	// 		beego.NSRouter("/properties/:id", &controllers.PropertyController{}, "get:DemoResponse"),
+	// 	),
+	// ))
 	ns := beego.NewNamespace("/v1",
-		beego.NSRouter("/properties", &controllers.PropertyController{}, "get:DemoResponse"),
-		beego.NSRouter("/properties/:id", &controllers.PropertyController{}, "get:DemoResponse"),
+		beego.NSNamespace("/properties",
+			beego.NSRouter("", &controllers.PropertyController{}, "get:DemoResponse"),
+			beego.NSRouter("/:id", &controllers.PropertyController{}, "get:DemoResponse"),
+		),
 	)
 	beego.AddNamespace(ns)
 }
