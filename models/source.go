@@ -3,6 +3,8 @@ package models
 import (
 	"encoding/json"
 	"os"
+	"slices"
+	"strings"
 	"sync"
 
 	"github.com/beego/beego/v2/core/logs"
@@ -44,7 +46,7 @@ type LongitudeLatitude struct {
 	Coordinates [2]float64 `json:"coordinates"`
 }
 
-type Property struct {
+type SourceProperty struct {
 	Id                   string            `json:"id"`
 	Feed                 int               `json:"feed"`
 	Country              string            `json:"country"`
@@ -71,7 +73,7 @@ type Property struct {
 	Images               []string          `json:"images"`
 }
 type Data struct {
-	Properties []Property
+	Properties []SourceProperty `json:"properties"`
 }
 
 var (
@@ -93,11 +95,14 @@ func (d *Data) loadData() {
 		logs.Error("Error reading file:", err)
 		return
 	}
-	var properties []Property
+	var properties []SourceProperty
 	err = json.Unmarshal(data, &properties)
 	if err != nil {
 		logs.Error("Error parsing JSON:", err)
 		return
 	}
+	slices.SortFunc(properties, func(a, b SourceProperty) int {
+		return strings.Compare(a.Id, b.Id)
+	})
 	d.Properties = properties
 }
