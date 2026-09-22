@@ -29,3 +29,6 @@ func (c *PropertyController) GetOne() {
 	c.Data["json"] = prop
 	c.ServeJSON()
 }
+func (c *PropertyController) GetAll() {
+
+}

@@ -1,0 +1,51 @@
+# -----------------------------------------------------------------------------
+# Beego & Bee Tool Specifics
+# -----------------------------------------------------------------------------
+# Auto-generated binary when running `bee run` (named after your root directory)
+/myapp
+/example-beego
+
+# Generated Swagger documentation files (if using bee generate docs)
+/swagger/
+
+# -----------------------------------------------------------------------------
+# Go Binaries and Build Artifacts
+# -----------------------------------------------------------------------------
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (only uncomment if you explicitly want to vendor)
+# vendor/
+
+# -----------------------------------------------------------------------------
+# Development Environment & OS Junk
+# -----------------------------------------------------------------------------
+# IDEs and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Operating Systems
+.DS_Store
+Thumbs.db
+
+# -----------------------------------------------------------------------------
+# Configuration / Sensitive Files
+# -----------------------------------------------------------------------------
+# Local environment variables (Do NOT commit real credentials)
+.env
+.env.local
