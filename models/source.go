@@ -2,6 +2,10 @@ package models
 
 import (
 	"encoding/json"
+	"os"
+	"sync"
+
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type CategoryItem struct {
@@ -65,4 +69,35 @@ type Property struct {
 	Categories           CategoryList      `json:"categories"`
 	Published            bool              `json:"published"`
 	Images               []string          `json:"images"`
+}
+type Data struct {
+	Properties []Property
+}
+
+var (
+	instance *Data
+	once     sync.Once
+)
+
+func GetData() *Data {
+	once.Do(func() {
+		instance = &Data{}
+		instance.loadData()
+	})
+	return instance
+}
+func (d *Data) loadData() {
+	logs.Informational("Reading data from disk")
+	data, err := os.ReadFile("data/rental_properties.json")
+	if err != nil {
+		logs.Error("Error reading file:", err)
+		return
+	}
+	var properties []Property
+	err = json.Unmarshal(data, &properties)
+	if err != nil {
+		logs.Error("Error parsing JSON:", err)
+		return
+	}
+	d.Properties = properties
 }
