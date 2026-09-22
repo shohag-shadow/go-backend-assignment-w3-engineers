@@ -20,3 +20,50 @@ func GetProertyByID(id string) (p models.SourceProperty, e error) {
 	e = nil
 	return p, e
 }
+
+func FilterProperties(properties []models.SourceProperty, filter models.PropertyFilters) []models.SourceProperty {
+	out := make([]models.SourceProperty, 0)
+
+	for _, property := range properties {
+		if filter.MinPrice != nil && property.USDPrice < *filter.MinPrice {
+			continue
+		}
+		if filter.MaxPrice != nil && property.USDPrice > *filter.MaxPrice {
+			continue
+		}
+		if filter.MinStarRating != nil && property.StarRating < *filter.MinStarRating {
+			continue
+		}
+		if filter.MinReviewScore != nil && property.ReviewScoreGeneral < *filter.MinReviewScore {
+			continue
+		}
+		if filter.MinReviews != nil && property.NumberOfReview < *filter.MinReviews {
+			continue
+		}
+		if filter.Published != nil && property.Published != *filter.Published {
+			continue
+		}
+		if filter.PropertyType != "" && property.PropertyTypeCategory != filter.PropertyType {
+			continue
+		}
+		if filter.Feed != nil && property.Feed != *filter.Feed {
+			continue
+		}
+		if filter.MinBedroom != nil && property.BedroomCount < *filter.MinBedroom {
+			continue
+		}
+		if filter.Amenities != nil {
+			if !(slices.ContainsFunc(property.AmenityCategories, func(amenity string) bool {
+				return slices.Contains(filter.Amenities, amenity)
+			})) {
+				continue
+			}
+		}
+		out = append(out, property)
+
+		if filter.Limit != nil && *filter.Limit > 0 && len(out) >= *filter.Limit {
+			break
+		}
+	}
+	return out
+}
