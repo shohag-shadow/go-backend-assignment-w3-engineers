@@ -67,3 +67,17 @@ func FilterProperties(properties []models.SourceProperty, filter models.Property
 	}
 	return out
 }
+
+func PrepareResponse(s []models.SourceProperty) models.SuccessResponse {
+	r := []models.Response{}
+	for _, property := range s {
+		r = append(r, models.GetResponseFromSource(&property))
+	}
+	successResult := models.SuccessResult{
+		Count: len(r),
+		Items: r,
+	}
+	return models.SuccessResponse{
+		Result: successResult,
+	}
+}

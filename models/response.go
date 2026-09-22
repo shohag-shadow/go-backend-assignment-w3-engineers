@@ -22,9 +22,15 @@ type Property struct {
 	Counts       Counts
 	Image        Image
 }
-
+type ResponseCategoryItem struct {
+	LocationID string
+	Name       string
+	Type       string
+	Slug       string
+	Display    []string
+}
 type GeoInfo struct {
-	Breadcrumbs []CategoryItem
+	Breadcrumbs []ResponseCategoryItem
 	City        string
 	Country     string
 	CountryCode string
@@ -45,9 +51,18 @@ type Response struct {
 }
 
 func GetResponseFromSource(s *SourceProperty) (r Response) {
-
+	breadcurmbs := []ResponseCategoryItem{}
+	for _, item := range s.Categories.Items {
+		breadcurmbs = append(breadcurmbs, ResponseCategoryItem{
+			LocationID: item.LocationID,
+			Name:       item.Name,
+			Type:       item.Type,
+			Slug:       item.Slug,
+			Display:    item.Display,
+		})
+	}
 	geoInfo := GeoInfo{
-		Breadcrumbs: s.Categories.Items,
+		Breadcrumbs: breadcurmbs,
 		City:        s.City,
 		Country:     s.Country,
 		CountryCode: s.CountryCode,
@@ -88,4 +103,11 @@ func GetResponseFromSource(s *SourceProperty) (r Response) {
 
 type ErrorResponse struct {
 	Error string
+}
+type SuccessResult struct {
+	Count int
+	Items []Response
+}
+type SuccessResponse struct {
+	Result SuccessResult
 }

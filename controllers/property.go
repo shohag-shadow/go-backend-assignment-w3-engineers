@@ -31,7 +31,8 @@ func (c *PropertyController) GetOne() {
 		c.RespondError(404, err.Error())
 		return
 	}
-	c.Data["json"] = prop
+	response := models.GetResponseFromSource(&prop)
+	c.Data["json"] = response
 	c.ServeJSON()
 }
 
@@ -42,7 +43,8 @@ func (c *PropertyController) GetAll() {
 	}
 	data := models.GetData().Properties
 	filteredData := services.FilterProperties(data, filters)
-	c.Data["json"] = filteredData
+	resposeData := services.PrepareResponse(filteredData)
+	c.Data["json"] = resposeData
 	c.ServeJSON()
 }
 
