@@ -1,0 +1,141 @@
+swagger: "2.0"
+info:
+  title: Renatal Property API
+  description: |
+    API to browse rental properties. Supports filtering by price,star rating, review score, number of reviews, published status,property type, feed, bedroom count, and amenities.
+  version: 1.0.0
+  contact:
+    email: mdshohagshowdagor001@gmail.com
+basePath: /v1
+paths: {}
+definitions:
+  models.Counts:
+    title: Counts
+    type: object
+    properties:
+      Bathroom:
+        type: integer
+        format: int64
+      Bedroom:
+        type: integer
+        format: int64
+      Occupancy:
+        type: integer
+        format: int64
+      Reviews:
+        type: integer
+        format: int64
+  models.GeoInfo:
+    title: GeoInfo
+    type: object
+    properties:
+      Breadcrumbs:
+        type: array
+        items:
+          $ref: '#/definitions/models.ResponseCategoryItem'
+      City:
+        type: string
+      Country:
+        type: string
+      CountryCode:
+        type: string
+      Lat:
+        type: number
+        format: double
+      LocationID:
+        type: string
+      Lon:
+        type: number
+        format: double
+      Name:
+        type: string
+      State:
+        type: string
+      StateAbbr:
+        type: string
+  models.Image:
+    title: Image
+    type: object
+    properties:
+      Count:
+        type: integer
+        format: int64
+      Images:
+        type: array
+        items:
+          type: string
+  models.Property:
+    title: Property
+    type: object
+    properties:
+      Amenities:
+        type: array
+        items:
+          type: string
+      Counts:
+        $ref: '#/definitions/models.Counts'
+      Image:
+        $ref: '#/definitions/models.Image'
+      Name:
+        type: string
+      Price:
+        type: number
+        format: double
+      PropertyType:
+        type: string
+      ReviewScore:
+        type: number
+        format: double
+      Slug:
+        type: string
+      StarRating:
+        type: integer
+        format: int64
+  models.Response:
+    title: Response
+    type: object
+    properties:
+      Feed:
+        type: integer
+        format: int64
+      GeoInfo:
+        $ref: '#/definitions/models.GeoInfo'
+      ID:
+        type: string
+      Property:
+        $ref: '#/definitions/models.Property'
+      Published:
+        type: boolean
+  models.ResponseCategoryItem:
+    title: ResponseCategoryItem
+    type: object
+    properties:
+      Display:
+        type: array
+        items:
+          type: string
+      LocationID:
+        type: string
+      Name:
+        type: string
+      Slug:
+        type: string
+      Type:
+        type: string
+  models.SuccessResponse:
+    title: SuccessResponse
+    type: object
+    properties:
+      Result:
+        $ref: '#/definitions/models.SuccessResult'
+  models.SuccessResult:
+    title: SuccessResult
+    type: object
+    properties:
+      Count:
+        type: integer
+        format: int64
+      Items:
+        type: array
+        items:
+          $ref: '#/definitions/models.Response'

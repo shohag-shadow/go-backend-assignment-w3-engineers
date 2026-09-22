@@ -13,29 +13,40 @@ type PropertyController struct {
 	BaseController
 }
 
-func (o *PropertyController) DemoResponse() {
-	data := services.GetData()
-
-	o.Data["json"] = models.GetResponseFromSource(&data.Properties[0])
-	o.ServeJSON()
-}
-
+// @Title GetOne
+// @Description get property by id
+// @Param	id		path 	string	true		"The property id"
+// @Success 200 {object} models.Response
+// @Failure 404 property not found
+// @router /v1/properties/:id [get]
 func (c *PropertyController) GetOne() {
 	id := c.Ctx.Input.Param(":id")
-	if id == "" {
-		c.RespondError(400, "Please enter a valid id")
-		return
-	}
 	prop, err := services.GetProertyByID(id)
 	if err != nil {
-		c.RespondError(404, err.Error())
+		c.RespondError(404, "Property not found")
 		return
 	}
-	response := models.GetResponseFromSource(&prop)
+	response := services.GetResponseFromSource(&prop)
 	c.Data["json"] = response
 	c.ServeJSON()
 }
 
+// @Title GetAll
+// @Description get all properties with optional filters
+// @Param	min_price			query	float64	false	"Minimum USD price"
+// @Param	max_price			query	float64	false	"Maximum USD price"
+// @Param	min_star_rating		query	int		false	"Minimum star rating"
+// @Param	min_review_score	query	float64	false	"Minimum review score"
+// @Param	min_reviews			query	int		false	"Minimum number of reviews"
+// @Param	published			query	bool	false	"Published status"
+// @Param	property_type		query	string	false	"Property type (Hotel, House, Apartment, Villa, Resort, Hostel)"
+// @Param	feed				query	int		false	"Feed id (11, 12, 22, 24)"
+// @Param	min_bedroom			query	int		false	"Minimum number of bedrooms"
+// @Param	limit				query	int		false	"Maximum number of results"
+// @Param	amenities			query	string	false	"Comma separated amenities"
+// @Success 200 {object} models.SuccessResponse
+// @Failure 400 invalid query parameter
+// @router /v1/properties [get]
 func (c *PropertyController) GetAll() {
 	filters, err := c.parseFilters()
 	if err != nil {

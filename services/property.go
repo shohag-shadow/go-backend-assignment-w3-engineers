@@ -80,11 +80,61 @@ func FilterProperties(properties []models.SourceProperty, filter models.Property
 	}
 	return out
 }
+func GetResponseFromSource(s *models.SourceProperty) (r models.Response) {
+	breadcurmbs := []models.ResponseCategoryItem{}
+	for _, item := range s.Categories.Items {
+		breadcurmbs = append(breadcurmbs, models.ResponseCategoryItem{
+			LocationID: item.LocationID,
+			Name:       item.Name,
+			Type:       item.Type,
+			Slug:       item.Slug,
+			Display:    item.Display,
+		})
+	}
+	geoInfo := models.GeoInfo{
+		Breadcrumbs: breadcurmbs,
+		City:        s.City,
+		Country:     s.Country,
+		CountryCode: s.CountryCode,
+		Name:        s.Display,
+		Lat:         s.LonLat.Coordinates[1],
+		Lon:         s.LonLat.Coordinates[0],
+		State:       s.State,
+		StateAbbr:   s.StateAbbr,
+	}
+	counts := models.Counts{
+		Bathroom:  s.BathroomCount,
+		Bedroom:   s.BedroomCount,
+		Reviews:   s.NumberOfReview,
+		Occupancy: s.Occupancy,
+	}
+	image := models.Image{
+		Count:  len(s.Images),
+		Images: s.Images,
+	}
+	property := models.Property{
+		Amenities:    s.AmenityCategories,
+		Name:         s.PropertyName,
+		Slug:         s.PropertySlug,
+		PropertyType: s.PropertyTypeCategory,
+		Price:        s.USDPrice,
+		ReviewScore:  s.ReviewScoreGeneral,
+		StarRating:   s.StarRating,
+		Counts:       counts,
+		Image:        image,
+	}
+	r.ID = s.Id
+	r.Feed = s.Feed
+	r.GeoInfo = geoInfo
+	r.Property = property
+	r.Published = s.Published
+	return r
+}
 
 func PrepareResponse(s []models.SourceProperty) models.SuccessResponse {
 	r := []models.Response{}
 	for _, property := range s {
-		r = append(r, models.GetResponseFromSource(&property))
+		r = append(r, GetResponseFromSource(&property))
 	}
 	successResult := models.SuccessResult{
 		Count: len(r),

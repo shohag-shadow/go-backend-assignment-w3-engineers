@@ -50,57 +50,6 @@ type Response struct {
 	Published bool
 }
 
-func GetResponseFromSource(s *SourceProperty) (r Response) {
-	breadcurmbs := []ResponseCategoryItem{}
-	for _, item := range s.Categories.Items {
-		breadcurmbs = append(breadcurmbs, ResponseCategoryItem{
-			LocationID: item.LocationID,
-			Name:       item.Name,
-			Type:       item.Type,
-			Slug:       item.Slug,
-			Display:    item.Display,
-		})
-	}
-	geoInfo := GeoInfo{
-		Breadcrumbs: breadcurmbs,
-		City:        s.City,
-		Country:     s.Country,
-		CountryCode: s.CountryCode,
-		Name:        s.Display,
-		Lat:         s.LonLat.Coordinates[1],
-		Lon:         s.LonLat.Coordinates[0],
-		State:       s.State,
-		StateAbbr:   s.StateAbbr,
-	}
-	counts := Counts{
-		Bathroom:  s.BathroomCount,
-		Bedroom:   s.BedroomCount,
-		Reviews:   s.NumberOfReview,
-		Occupancy: s.Occupancy,
-	}
-	image := Image{
-		Count:  len(s.Images),
-		Images: s.Images,
-	}
-	property := Property{
-		Amenities:    s.AmenityCategories,
-		Name:         s.PropertyName,
-		Slug:         s.PropertySlug,
-		PropertyType: s.PropertyTypeCategory,
-		Price:        s.USDPrice,
-		ReviewScore:  s.ReviewScoreGeneral,
-		StarRating:   s.StarRating,
-		Counts:       counts,
-		Image:        image,
-	}
-	r.ID = s.Id
-	r.Feed = s.Feed
-	r.GeoInfo = geoInfo
-	r.Property = property
-	r.Published = s.Published
-	return r
-}
-
 type ErrorResponse struct {
 	Error string
 }

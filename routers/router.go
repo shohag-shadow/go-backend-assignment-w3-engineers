@@ -1,10 +1,7 @@
 // @APIVersion 1.0.0
-// @Title beego Test API
-// @Description beego has a very cool tools to autogenerate documents for your API
-// @Contact astaxie@gmail.com
-// @TermsOfServiceUrl http://beego.me/
-// @License Apache 2.0
-// @LicenseUrl http://www.apache.org/licenses/LICENSE-2.0.html
+// @Title Renatal Property API
+// @Description API to browse rental properties. Supports filtering by price,star rating, review score, number of reviews, published status,property type, feed, bedroom count, and amenities.
+// @Contact mdshohagshowdagor001@gmail.com
 package routers
 
 import (
@@ -14,24 +11,6 @@ import (
 )
 
 func init() {
-	// ns := beego.NewNamespace("/v1",
-	// 	beego.NSNamespace("/object",
-	// 		beego.NSInclude(
-	// 			&controllers.ObjectController{},
-	// 		),
-	// 	),
-	// 	beego.NSNamespace("/user",
-	// 		beego.NSInclude(
-	// 			&controllers.UserController{},
-	// 		),
-	// 	),
-	// )
-	// ns := beego.NewNamespace("/v1",
-	// 	beego.NSNamespace("/pro"(
-	// 		beego.NSRouter("/properties", &controllers.PropertyController{}, "get:DemoResponse"),
-	// 		beego.NSRouter("/properties/:id", &controllers.PropertyController{}, "get:DemoResponse"),
-	// 	),
-	// ))
 	ns := beego.NewNamespace("/v1",
 		beego.NSNamespace("/properties",
 			beego.NSRouter("", &controllers.PropertyController{}, "get:GetAll"),

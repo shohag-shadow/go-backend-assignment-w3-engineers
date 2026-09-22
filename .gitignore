@@ -5,9 +5,6 @@
 /myapp
 /example-beego
 
-# Generated Swagger documentation files (if using bee generate docs)
-/swagger/
-
 # -----------------------------------------------------------------------------
 # Go Binaries and Build Artifacts
 # -----------------------------------------------------------------------------
