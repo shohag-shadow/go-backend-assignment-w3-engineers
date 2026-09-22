@@ -7,13 +7,16 @@ import (
 	"strings"
 )
 
-func GetProertyById(id string) (p models.SourceProperty, e error) {
+func GetProertyByID(id string) (p models.SourceProperty, e error) {
 	properties := models.GetData().Properties
-	sorted := slices.IsSortedFunc(properties, func(a, b models.SourceProperty) int {
-		return strings.Compare(a.Id, b.Id)
+	index, found := slices.BinarySearchFunc(properties, id, func(property models.SourceProperty, id string) int {
+		return strings.Compare(property.Id, id)
 	})
-	fmt.Println("Is sorted by Id:", sorted)
-	p = properties[0]
+	if !found {
+		e = fmt.Errorf("Id not found")
+		return p, e
+	}
+	p = properties[index]
 	e = nil
 	return p, e
 }

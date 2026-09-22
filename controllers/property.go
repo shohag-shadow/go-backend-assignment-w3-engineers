@@ -3,12 +3,10 @@ package controllers
 import (
 	"rental-property-api/models"
 	"rental-property-api/services"
-
-	beego "github.com/beego/beego/v2/server/web"
 )
 
 type PropertyController struct {
-	beego.Controller
+	BaseController
 }
 
 func (o *PropertyController) DemoResponse() {
@@ -19,7 +17,15 @@ func (o *PropertyController) DemoResponse() {
 }
 func (c *PropertyController) GetOne() {
 	id := c.Ctx.Input.Param(":id")
-	prop, _ := services.GetProertyById(id)
+	if id == "" {
+		c.RespondError(404, "Please enter a valid id")
+		return
+	}
+	prop, err := services.GetProertyByID(id)
+	if err != nil {
+		c.RespondError(404, err.Error())
+		return
+	}
 	c.Data["json"] = prop
 	c.ServeJSON()
 }

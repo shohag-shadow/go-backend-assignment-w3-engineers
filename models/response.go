@@ -85,3 +85,7 @@ func GetResponseFromSource(s *SourceProperty) (r Response) {
 	r.Published = s.Published
 	return r
 }
+
+type ErrorResponse struct {
+	Error string
+}
