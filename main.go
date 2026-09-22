@@ -1,14 +1,14 @@
 package main
 
 import (
-	"rental-property-api/models"
 	_ "rental-property-api/routers"
+	"rental-property-api/services"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
 
 func init() {
-	models.GetData()
+	services.GetData()
 }
 func main() {
 	if beego.BConfig.RunMode == "dev" {

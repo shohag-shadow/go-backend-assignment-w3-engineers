@@ -5,7 +5,6 @@ import (
 	"os"
 	"slices"
 	"strings"
-	"sync"
 
 	"github.com/beego/beego/v2/core/logs"
 )
@@ -76,19 +75,7 @@ type Data struct {
 	Properties []SourceProperty `json:"properties"`
 }
 
-var (
-	instance *Data
-	once     sync.Once
-)
-
-func GetData() *Data {
-	once.Do(func() {
-		instance = &Data{}
-		instance.loadData()
-	})
-	return instance
-}
-func (d *Data) loadData() {
+func (d *Data) LoadData() {
 	logs.Informational("Reading data from disk")
 	data, err := os.ReadFile("data/rental_properties.json")
 	if err != nil {

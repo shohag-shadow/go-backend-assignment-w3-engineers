@@ -14,7 +14,7 @@ type PropertyController struct {
 }
 
 func (o *PropertyController) DemoResponse() {
-	data := models.GetData()
+	data := services.GetData()
 
 	o.Data["json"] = models.GetResponseFromSource(&data.Properties[0])
 	o.ServeJSON()
@@ -41,7 +41,7 @@ func (c *PropertyController) GetAll() {
 	if err != nil {
 		return
 	}
-	data := models.GetData().Properties
+	data := services.GetData().Properties
 	filteredData := services.FilterProperties(data, filters)
 	resposeData := services.PrepareResponse(filteredData)
 	c.Data["json"] = resposeData

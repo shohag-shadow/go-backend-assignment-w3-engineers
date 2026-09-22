@@ -5,10 +5,23 @@ import (
 	"rental-property-api/models"
 	"slices"
 	"strings"
+	"sync"
 )
 
+var (
+	instance *models.Data
+	once     sync.Once
+)
+
+func GetData() *models.Data {
+	once.Do(func() {
+		instance = &models.Data{}
+		instance.LoadData()
+	})
+	return instance
+}
 func GetProertyByID(id string) (p models.SourceProperty, e error) {
-	properties := models.GetData().Properties
+	properties := GetData().Properties
 	index, found := slices.BinarySearchFunc(properties, id, func(property models.SourceProperty, id string) int {
 		return strings.Compare(property.Id, id)
 	})
