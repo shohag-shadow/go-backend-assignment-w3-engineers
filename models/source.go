@@ -75,9 +75,12 @@ type Data struct {
 	Properties []SourceProperty `json:"properties"`
 }
 
-func (d *Data) LoadData() {
+func (d *Data) LoadData(filepath string) {
 	logs.Informational("Reading data from disk")
-	data, err := os.ReadFile("data/rental_properties.json")
+	if filepath == "" {
+		filepath = "data/rental_properties.json"
+	}
+	data, err := os.ReadFile(filepath)
 	if err != nil {
 		logs.Error("Error reading file:", err)
 		return

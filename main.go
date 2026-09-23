@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	services.GetData()
+	services.GetData("")
 }
 func main() {
 	if beego.BConfig.RunMode == "dev" {

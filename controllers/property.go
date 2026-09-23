@@ -52,7 +52,7 @@ func (c *PropertyController) GetAll() {
 	if err != nil {
 		return
 	}
-	data := services.GetData().Properties
+	data := services.GetData("").Properties
 	filteredData := services.FilterProperties(data, filters)
 	resposeData := services.PrepareResponse(filteredData)
 	c.Data["json"] = resposeData

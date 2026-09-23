@@ -13,15 +13,15 @@ var (
 	once     sync.Once
 )
 
-func GetData() *models.Data {
+func GetData(filepath string) *models.Data {
 	once.Do(func() {
 		instance = &models.Data{}
-		instance.LoadData()
+		instance.LoadData(filepath)
 	})
 	return instance
 }
 func GetProertyByID(id string) (p models.SourceProperty, e error) {
-	properties := GetData().Properties
+	properties := GetData("").Properties
 	index, found := slices.BinarySearchFunc(properties, id, func(property models.SourceProperty, id string) int {
 		return strings.Compare(property.Id, id)
 	})
