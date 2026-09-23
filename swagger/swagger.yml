@@ -7,7 +7,96 @@ info:
   contact:
     email: mdshohagshowdagor001@gmail.com
 basePath: /v1
-paths: {}
+paths:
+  /properties/:
+    get:
+      tags:
+      - properties
+      description: |-
+        get all properties with optional filters
+        <br>
+      operationId: PropertyController.GetAll
+      parameters:
+      - in: query
+        name: min_price
+        description: Minimum USD price
+        type: number
+        format: double
+      - in: query
+        name: max_price
+        description: Maximum USD price
+        type: number
+        format: double
+      - in: query
+        name: min_star_rating
+        description: Minimum star rating
+        type: integer
+        format: int64
+      - in: query
+        name: min_review_score
+        description: Minimum review score
+        type: number
+        format: double
+      - in: query
+        name: min_reviews
+        description: Minimum number of reviews
+        type: integer
+        format: int64
+      - in: query
+        name: published
+        description: Published status
+        type: boolean
+      - in: query
+        name: property_type
+        description: Property type (Hotel, House, Apartment, Villa, Resort, Hostel)
+        type: string
+      - in: query
+        name: feed
+        description: Feed id (11, 12, 22, 24)
+        type: integer
+        format: int64
+      - in: query
+        name: min_bedroom
+        description: Minimum number of bedrooms
+        type: integer
+        format: int64
+      - in: query
+        name: limit
+        description: Maximum number of results
+        type: integer
+        format: int64
+      - in: query
+        name: amenities
+        description: Comma separated amenities
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: invalid query parameter
+  /properties/{id}:
+    get:
+      tags:
+      - properties
+      description: |-
+        get property by id
+        <br>
+      operationId: PropertyController.GetOne
+      parameters:
+      - in: path
+        name: id
+        description: The property id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: property not found
 definitions:
   models.Counts:
     title: Counts

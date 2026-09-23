@@ -18,7 +18,7 @@ type PropertyController struct {
 // @Param	id		path 	string	true		"The property id"
 // @Success 200 {object} models.Response
 // @Failure 404 property not found
-// @router /v1/properties/:id [get]
+// @router /:id [get]
 func (c *PropertyController) GetOne() {
 	id := c.Ctx.Input.Param(":id")
 	prop, err := services.GetProertyByID(id)
@@ -46,9 +46,9 @@ func (c *PropertyController) GetOne() {
 // @Param	amenities			query	string	false	"Comma separated amenities"
 // @Success 200 {object} models.SuccessResponse
 // @Failure 400 invalid query parameter
-// @router /v1/properties [get]
+// @router / [get]
 func (c *PropertyController) GetAll() {
-	filters, err := c.parseFilters()
+	filters, err := parseFilters(c)
 	if err != nil {
 		return
 	}
@@ -58,7 +58,7 @@ func (c *PropertyController) GetAll() {
 	c.ServeJSON()
 }
 
-func (c *PropertyController) parseFilters() (models.PropertyFilters, error) {
+func parseFilters(c *PropertyController) (models.PropertyFilters, error) {
 	filters := models.PropertyFilters{}
 
 	minPriceString := c.GetString("min_price")
