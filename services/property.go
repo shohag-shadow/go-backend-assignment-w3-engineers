@@ -129,6 +129,7 @@ func GetResponseFromSource(s *models.SourceProperty) (r models.Response) {
 	r.GeoInfo = geoInfo
 	r.Property = property
 	r.Published = s.Published
+	r.GeoInfo.LocationID = s.LocationID
 	return r
 }
 

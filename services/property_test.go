@@ -187,6 +187,82 @@ func TestFilterCombined(t *testing.T) {
 		})
 	}
 }
+func TestGetResponseFromSource(t *testing.T) {
+	tests := []struct {
+		name     string
+		source   models.SourceProperty
+		response models.Response
+	}{
+		{"Test sourse with response", wantHa2000022, responseHA2000022},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := GetResponseFromSource(&tc.source)
+			if !reflect.DeepEqual(got, tc.response) {
+				t.Errorf("got %+v,\n want %+v", got, tc.response)
+			}
+		})
+	}
+}
+
+var responseHA2000022 = models.Response{
+	ID:   "HA-2000022",
+	Feed: 12,
+	GeoInfo: models.GeoInfo{
+		Breadcrumbs: []models.ResponseCategoryItem{
+			{
+				LocationID: "90",
+				Name:       "United States",
+				Type:       "country",
+				Slug:       "united-states",
+				Display:    []string{"united-states"},
+			},
+			{
+				LocationID: "7050020",
+				Name:       "Utah",
+				Type:       "state",
+				Slug:       "united-states/utah",
+				Display:    []string{"united-states", "utah"},
+			},
+			{
+				LocationID: "7200022",
+				Name:       "Salt Lake City",
+				Type:       "city",
+				Slug:       "united-states/utah/salt-lake-city",
+				Display:    []string{"united-states", "utah", "salt-lake-city"},
+			},
+		},
+		City:        "Salt Lake City",
+		Country:     "United States",
+		CountryCode: "US",
+		Name:        "Salt Lake City, United States",
+		LocationID:  "7200022",
+		Lat:         40.7608,
+		Lon:         -111.891,
+		State:       "Utah",
+		StateAbbr:   "UT",
+	},
+	Property: models.Property{
+		Amenities:    []string{"Child Friendly", "Laundry", "Parking", "Gym", "Internet"},
+		Name:         "Salt Lake City Harbor House",
+		Slug:         "salt-lake-city-harbor-house-0022",
+		PropertyType: "House",
+		Price:        91.5,
+		ReviewScore:  8.6,
+		StarRating:   3,
+		Counts: models.Counts{
+			Bathroom:  2,
+			Bedroom:   1,
+			Reviews:   275,
+			Occupancy: 7,
+		},
+		Image: models.Image{
+			Count:  4,
+			Images: []string{"image-1.jpg", "image-2.jpg", "image-3.jpg", "image-4.jpg"},
+		},
+	},
+	Published: false,
+}
 
 var wantHa2000022 = models.SourceProperty{
 	Id:                   "HA-2000022",
