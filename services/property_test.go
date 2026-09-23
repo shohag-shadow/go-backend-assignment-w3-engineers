@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"rental-property-api/models"
+	"slices"
 	"testing"
 )
 
@@ -60,7 +61,128 @@ func TestGetPropertyByID(t *testing.T) {
 			}
 
 			if !reflect.DeepEqual(got, tc.want) {
-				t.Errorf("got %+v, want %+v", got, tc.want)
+				t.Errorf("got %+v,\n want %+v", got, tc.want)
+			}
+		})
+	}
+}
+
+func f64(v float64) *float64 { return &v }
+func i(v int) *int           { return &v }
+
+func TestFilterProperties(t *testing.T) {
+	tests := []struct {
+		name    string
+		filters models.PropertyFilters
+		want    int
+	}{
+		{
+			name: "Filter with and including limit",
+			filters: models.PropertyFilters{
+				MinPrice:     f64(100),
+				PropertyType: "Resort",
+				Limit:        i(2),
+			},
+			want: 2,
+		},
+		{
+			name: "Filter with and without limit",
+			filters: models.PropertyFilters{
+				MinPrice:     f64(100),
+				PropertyType: "Resort",
+			},
+			want: 15,
+		},
+		{
+			name: "Filter for no value",
+			filters: models.PropertyFilters{
+				MinPrice:     f64(10000),
+				PropertyType: "Resort",
+			},
+			want: 0,
+		},
+	}
+
+	GetData("../data/rental_properties.json")
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			got := len(FilterProperties(tc.filters))
+
+			if got != tc.want {
+				t.Errorf("got %v values, want %v", got, tc.want)
+			}
+		})
+	}
+}
+func TestFilterPropertiesForAmenities(t *testing.T) {
+	tests := []struct {
+		name    string
+		filters models.PropertyFilters
+	}{
+		{
+			name: "Filter with and including limit",
+			filters: models.PropertyFilters{
+				Amenities: []string{"Internet", "Parking"},
+			},
+		},
+	}
+
+	GetData("../data/rental_properties.json")
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			got := FilterProperties(tc.filters)
+			doesSatisfyAmenities(tc.filters.Amenities, got, t)
+		})
+	}
+}
+func doesSatisfyAmenities(amenities []string, properties []models.SourceProperty, t *testing.T) {
+	for _, property := range properties {
+		found := false
+		for _, gotAmenity := range property.AmenityCategories {
+			if slices.Contains(amenities, gotAmenity) {
+				found = true
+				break
+			}
+			if found {
+				break
+			}
+		}
+		if found == false {
+			t.Errorf("Amenities does not match got %v wanted from %v", property.AmenityCategories, amenities)
+			return
+		}
+	}
+}
+func TestFilterCombined(t *testing.T) {
+	tests := []struct {
+		name    string
+		filters models.PropertyFilters
+		want    int
+	}{
+		{
+			name: "Filter with and including limit",
+			filters: models.PropertyFilters{
+				MinPrice:     f64(100),
+				PropertyType: "Resort",
+				Amenities:    []string{"Internet", "Parking"},
+			},
+			want: 9,
+		},
+	}
+
+	GetData("../data/rental_properties.json")
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			got := FilterProperties(tc.filters)
+			doesSatisfyAmenities(tc.filters.Amenities, got, t)
+			if len(got) != tc.want {
+				t.Errorf("got %v values, want %v", len(got), tc.want)
 			}
 		})
 	}

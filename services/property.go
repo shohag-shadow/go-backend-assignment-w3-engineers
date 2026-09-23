@@ -34,7 +34,8 @@ func GetProertyByID(id string) (p models.SourceProperty, e error) {
 	return p, e
 }
 
-func FilterProperties(properties []models.SourceProperty, filter models.PropertyFilters) []models.SourceProperty {
+func FilterProperties(filter models.PropertyFilters) []models.SourceProperty {
+	properties := GetData("").Properties
 	out := make([]models.SourceProperty, 0)
 
 	for _, property := range properties {
