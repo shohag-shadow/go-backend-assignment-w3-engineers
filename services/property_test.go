@@ -8,6 +8,22 @@ import (
 	"testing"
 )
 
+func TestGetData(t *testing.T) {
+	tests := []struct {
+		name string
+		want int
+	}{
+		{"Test GetData", 100},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := GetData("../data/rental_properties.json").Properties
+			if len(got) != tc.want {
+				t.Errorf("got %v values,\n want %v values", len(got), tc.want)
+			}
+		})
+	}
+}
 func TestGetPropertyByID(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -200,6 +216,25 @@ func TestGetResponseFromSource(t *testing.T) {
 			got := GetResponseFromSource(&tc.source)
 			if !reflect.DeepEqual(got, tc.response) {
 				t.Errorf("got %+v,\n want %+v", got, tc.response)
+			}
+		})
+	}
+}
+
+func TestPrepareResponse(t *testing.T) {
+
+	tests := []struct {
+		name   string
+		source []models.SourceProperty
+		want   int
+	}{
+		{"Test Response structure", GetData("../data/rental_properties.json").Properties, 100},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := PrepareResponse(tc.source)
+			if len(got.Result.Items) != got.Result.Count || got.Result.Count != tc.want {
+				t.Errorf("got %v values,\n want %v values", got.Result.Count, tc.want)
 			}
 		})
 	}
