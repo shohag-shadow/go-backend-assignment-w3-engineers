@@ -60,7 +60,7 @@ func (c *PropertyController) GetAll() {
 
 func parseFilters(c *PropertyController) (models.PropertyFilters, error) {
 	filters := models.PropertyFilters{}
-
+	priceFilterCount := 0
 	minPriceString := c.GetString("min_price")
 	if minPriceString != "" {
 		minPrice, minPriceError := strconv.ParseFloat(minPriceString, 64)
@@ -73,6 +73,7 @@ func parseFilters(c *PropertyController) (models.PropertyFilters, error) {
 			return filters, fmt.Errorf("parsing error")
 		}
 		filters.MinPrice = &minPrice
+		priceFilterCount++
 	}
 
 	maxPriceString := c.GetString("max_price")
@@ -87,8 +88,12 @@ func parseFilters(c *PropertyController) (models.PropertyFilters, error) {
 			return filters, fmt.Errorf("parsing error")
 		}
 		filters.MaxPrice = &maxPrice
+		priceFilterCount++
 	}
-
+	if priceFilterCount == 2 && *filters.MaxPrice < *filters.MinPrice {
+		c.RespondError(400, "max_price should be less than min_price")
+		return filters, fmt.Errorf("parsing error")
+	}
 	minStarRatingString := c.GetString("min_star_rating")
 	if minStarRatingString != "" {
 		minStarRating, minStarRatingError := strconv.Atoi(minStarRatingString)
