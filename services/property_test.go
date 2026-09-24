@@ -23,7 +23,7 @@ func setfilepath() {
 
 	confPath := filepath.Join(projectRoot, "conf", "app.conf")
 	if err := web.LoadAppConfig("ini", confPath); err != nil {
-		panic(err)
+		return
 	}
 
 	testFilePath, _ = web.AppConfig.String("testfilepath")
