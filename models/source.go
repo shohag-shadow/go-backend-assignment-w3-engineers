@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
+	"github.com/beego/beego/v2/server/web"
 )
 
 type CategoryItem struct {
@@ -78,7 +79,7 @@ type Data struct {
 func (d *Data) LoadData(filepath string) {
 	logs.Informational("Reading data from disk")
 	if filepath == "" {
-		filepath = "data/rental_properties.json"
+		filepath, _ = web.AppConfig.String("filepath")
 	}
 	data, err := os.ReadFile(filepath)
 	if err != nil {

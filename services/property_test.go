@@ -2,13 +2,35 @@ package services
 
 import (
 	"fmt"
+	"path/filepath"
 	"reflect"
 	"rental-property-api/models"
+	"runtime"
 	"slices"
 	"testing"
+
+	"github.com/beego/beego/v2/server/web"
 )
 
+var testFilePath string
+
+func setfilepath() {
+	_, thisFile, _, _ := runtime.Caller(0)
+	projectRoot, err := filepath.Abs(filepath.Join(filepath.Dir(thisFile), ".."))
+	if err != nil {
+		panic(err)
+	}
+
+	confPath := filepath.Join(projectRoot, "conf", "app.conf")
+	if err := web.LoadAppConfig("ini", confPath); err != nil {
+		panic(err)
+	}
+
+	testFilePath, _ = web.AppConfig.String("testfilepath")
+
+}
 func TestGetData(t *testing.T) {
+	setfilepath()
 	tests := []struct {
 		name string
 		want int
@@ -17,7 +39,7 @@ func TestGetData(t *testing.T) {
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := GetData("../data/rental_properties.json").Properties
+			got := GetData(testFilePath).Properties
 			if len(got) != tc.want {
 				t.Errorf("got %v values,\n want %v values", len(got), tc.want)
 			}
@@ -57,7 +79,7 @@ func TestGetPropertyByID(t *testing.T) {
 		},
 	}
 	//calling getdata so that data file loads before the test starts
-	GetData("../data/rental_properties.json")
+	GetData(testFilePath)
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := GetProertyByID(tc.id)
@@ -119,7 +141,7 @@ func TestFilterProperties(t *testing.T) {
 		},
 	}
 
-	GetData("../data/rental_properties.json")
+	GetData(testFilePath)
 
 	for _, tc := range tests {
 		tc := tc
@@ -145,7 +167,7 @@ func TestFilterPropertiesForAmenities(t *testing.T) {
 		},
 	}
 
-	GetData("../data/rental_properties.json")
+	GetData(testFilePath)
 
 	for _, tc := range tests {
 		tc := tc
@@ -190,7 +212,7 @@ func TestFilterCombined(t *testing.T) {
 		},
 	}
 
-	GetData("../data/rental_properties.json")
+	GetData(testFilePath)
 
 	for _, tc := range tests {
 		tc := tc
@@ -228,7 +250,7 @@ func TestPrepareResponse(t *testing.T) {
 		source []models.SourceProperty
 		want   int
 	}{
-		{"Test Response structure", GetData("../data/rental_properties.json").Properties, 100},
+		{"Test Response structure", GetData(testFilePath).Properties, 100},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
